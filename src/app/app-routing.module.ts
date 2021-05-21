@@ -11,7 +11,7 @@ const routes: Routes = [
   { path: 'logout', component: LogoutComponent },
   { path: 'expenses', component: ExpenseEntryListComponent,canActivate:[ExpenseGuard] },
   { path: 'expenses/detail/:id', component: ExpenseEntryComponent,canActivate:[ExpenseGuard] },
-  { path: '', redirectTo: 'expenses', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
 ];
 
 @NgModule({
