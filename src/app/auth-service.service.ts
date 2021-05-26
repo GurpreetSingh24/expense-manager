@@ -1,18 +1,24 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
+// import { Subject } from 'rxjs/Subject';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   isUserLoggedIn: boolean = false;
-  constructor() {}
+  private hasUser: Subject<boolean>;
+  constructor() {
+    this.hasUser = new Subject<boolean>();
+  }
 
   login(userName: string, password: string): Observable<boolean> {
     console.log(userName);
     console.log(password);
+
     this.isUserLoggedIn = userName == 'admin' && password == 'admin';
+
     localStorage.setItem(
       'isUserLoggedIn',
       this.isUserLoggedIn ? 'true' : 'false'
@@ -26,8 +32,16 @@ export class AuthService {
     );
   }
 
-  logout(): void{
+  public setUser(user: boolean) {
+    this.hasUser.next(user);
+  }
+
+  public getUser(): Observable<boolean> {
+    return this.hasUser.asObservable();
+  }
+
+  logout(): void {
     this.isUserLoggedIn = false;
-    localStorage.removeItem("isUserLoggedIn");
+    localStorage.removeItem('isUserLoggedIn');
   }
 }
