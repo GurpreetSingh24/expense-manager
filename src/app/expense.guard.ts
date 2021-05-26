@@ -16,23 +16,21 @@ export class ExpenseGuard implements CanActivate {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(
-    route: ActivatedRouteSnapshot,
+    next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ):
-    | Observable<boolean | UrlTree>
-    | Promise<boolean | UrlTree>
-    | boolean
-    | UrlTree {
-    return true;
+  ): boolean | UrlTree {
+    let url: string = state.url;
+
+    return this.checkLogin(url);
   }
 
   checkLogin(url: string): true | UrlTree {
     console.log('Url: ' + url);
-    let val: string = JSON.parse(localStorage.getItem('isUserLoggedIn')!);
-
-    if (val != null && val == 'true' && url == '/login') {
-      this.router.parseUrl('/expenses');
-      return true;
+    let val: boolean = JSON.parse(localStorage.getItem('isUserLoggedIn')!);
+    
+    if (val != null && val) {
+      if (url == '/login') return this.router.parseUrl('/expenses');
+      else return true;
     } else {
       return this.router.parseUrl('/login');
     }

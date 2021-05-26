@@ -10,9 +10,11 @@ import { ExpenseEntry } from './ExpenseEntry';
 })
 
 export class ExpenseEntryService {
-  private expenseRestUrl = 'http://192.168.43.248:5100/api/expense';
+  data!: {};
+  private expenseRestUrl = 'http://192.168.0.107:5100/api/expense';
   private httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+    
   };
 
   constructor(private httpClient: HttpClient) {}
@@ -21,12 +23,17 @@ export class ExpenseEntryService {
     return this.httpClient
       .get<ExpenseEntry[]>(this.expenseRestUrl, this.httpOptions)
       .pipe(catchError(this.httpErrorHandler));
+      
   }
 
   getExpenseEntry(id: number): Observable<ExpenseEntry> {
     return this.httpClient
       .get<ExpenseEntry>(this.expenseRestUrl + '/detail/' + id, this.httpOptions)
       .pipe(catchError(this.httpErrorHandler));
+  }
+
+  getHeaderValue(): Observable<any>{
+    return this.httpClient.get('http://192.168.0.107:5100'); //.subscribe(data => this.data = data);
   }
 
   private httpErrorHandler(error: HttpErrorResponse) {
